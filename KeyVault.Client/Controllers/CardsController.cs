@@ -1,5 +1,6 @@
 ﻿namespace KeyVault.Client.Controllers
 {
+    using System;
     using System.Threading.Tasks;
     using System.Web.Http;
     using KeyVault.Client.Models;
@@ -15,22 +16,43 @@
             this.tokeniserService = tokeniserService;
         }
 
-        [Route("{id}")]
+        [Route("{token}")]
         [HttpGet]
-        public async Task<IHttpActionResult> Get(string id)
+        public async Task<IHttpActionResult> Get(string token)
         {
-            var result = await this.tokeniserService.Detokenise(id);
+            try
+            {
+                var result = await this.tokeniserService.Detokenise<CardHolderData>(token);
 
-            return this.Ok(result);
+                if (result == null)
+                {
+                    return this.NotFound();
+                }
+
+                return this.Ok(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody]CardHolderData card)
         {
-            var token = await this.tokeniserService.Tokenise(card);
-            var uri = $"{this.Request.RequestUri}/{token}";
+            try
+            {
+                var token = await this.tokeniserService.Tokenise(card);
+                var uri = $"{this.Request.RequestUri}{token}";
 
-            return this.Created(uri, token);
+                return this.Created(uri, card);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

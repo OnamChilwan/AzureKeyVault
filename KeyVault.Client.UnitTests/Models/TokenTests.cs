@@ -1,9 +1,7 @@
 ﻿namespace KeyVault.Client.UnitTests.Models
 {
     using System;
-
     using KeyVault.Client.Models;
-
     using NUnit.Framework;
 
     [TestFixture]

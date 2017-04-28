@@ -1,49 +1,63 @@
 namespace KeyVault.Client.Services
 {
+    using System;
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.Threading.Tasks;
-
-    using KeyVault.Client.Models;
-    using KeyVault.Client.Repositories;
+    using KeyVault.Client.Commands;
+    using KeyVault.Client.Queries;
 
     public interface ITokeniserService
     {
-        Task<string> Tokenise(CardHolderData cardHolderData);
+        Task<string> Tokenise<T>(T data);
 
-        Task<CardHolderData> Detokenise(string token);
+        Task<T> Detokenise<T>(string token);
     }
 
     public class TokeniserService : ITokeniserService
     {
         private readonly IAddCardCommand addCardCommand;
         private readonly IGetCardQuery getCardQuery;
-        private readonly IKeyVaultService keyVaultService;
 
         public TokeniserService(
             IAddCardCommand addCardCommand,
-            IGetCardQuery getCardQuery,
-            IKeyVaultService keyVaultService)
+            IGetCardQuery getCardQuery)
         {
             this.addCardCommand = addCardCommand;
             this.getCardQuery = getCardQuery;
-            this.keyVaultService = keyVaultService;
         }
 
-        public async Task<string> Tokenise(CardHolderData cardHolderData)
+        public async Task<string> Tokenise<T>(T data)
         {
-            var token = Token.Create();
-            var encryptedCard = await this.keyVaultService.Encrypt(cardHolderData);
+            // create a JWT here
+            var token = Guid.NewGuid().ToString("D"); //Token.Create();
+            string base64String;
 
-            await this.addCardCommand.Execute(token.ToString(), encryptedCard);
+            using (var stream = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                stream.Seek(0, SeekOrigin.Begin);
+                formatter.Serialize(stream, data);
+                await stream.FlushAsync();
+                stream.Position = 0;
+                base64String = Convert.ToBase64String(stream.ToArray());
+            }
 
-            return await Task.FromResult(token.ToString());
+            await this.addCardCommand.Execute(token, base64String);
+
+            return await Task.FromResult(token);
         }
 
-        public async Task<CardHolderData> Detokenise(string token)
+        public async Task<T> Detokenise<T>(string token)
         {
-            var encryptedCard = await this.getCardQuery.Execute(token);
-            var card = await this.keyVaultService.Decrypt(encryptedCard);
+            var data = await this.getCardQuery.Execute(token);
 
-            return card;
+            using (var stream = new MemoryStream(Convert.FromBase64String(data)))
+            {
+                var formatter = new BinaryFormatter();
+                stream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(stream);
+            }
         }
     }
 }

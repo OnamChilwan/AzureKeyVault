@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVault.Client", "KeyVault
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVault.Client.UnitTests", "KeyVault.Client.UnitTests\KeyVault.Client.UnitTests.csproj", "{0F67D821-E877-4A77-A80F-4B1D7B87D53B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVault.Client.ComponentTests", "KeyVault.Client.ComponentTests\KeyVault.Client.ComponentTests.csproj", "{4038A704-19F0-4C7C-B202-F148126251A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{0F67D821-E877-4A77-A80F-4B1D7B87D53B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F67D821-E877-4A77-A80F-4B1D7B87D53B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F67D821-E877-4A77-A80F-4B1D7B87D53B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4038A704-19F0-4C7C-B202-F148126251A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4038A704-19F0-4C7C-B202-F148126251A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4038A704-19F0-4C7C-B202-F148126251A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4038A704-19F0-4C7C-B202-F148126251A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +38,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A583701B-20AB-4DA0-A6FB-7A37C93F1662} = {D0E8782F-B321-420C-A729-2E65BCCDDC7B}
 		{0F67D821-E877-4A77-A80F-4B1D7B87D53B} = {BCF58984-9773-4F3A-985F-03C6DE152305}
+		{4038A704-19F0-4C7C-B202-F148126251A1} = {BCF58984-9773-4F3A-985F-03C6DE152305}
 	EndGlobalSection
 EndGlobal
