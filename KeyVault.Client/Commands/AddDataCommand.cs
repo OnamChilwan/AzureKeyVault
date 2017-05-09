@@ -5,16 +5,16 @@ namespace KeyVault.Client.Commands
     using System.Threading.Tasks;
     using Dapper;
 
-    public interface IAddCardCommand
+    public interface IAddDataCommand
     {
         Task Execute(string token, string data);
     }
 
-    public class SqlAddCardCommand : IAddCardCommand
+    public class SqlAddDataCommand : IAddDataCommand
     {
         private readonly string connectionString;
 
-        public SqlAddCardCommand(string connectionString)
+        public SqlAddDataCommand(string connectionString)
         {
             this.connectionString = connectionString;
         }
@@ -32,7 +32,7 @@ namespace KeyVault.Client.Commands
         private static async Task<int> InsertData(IDbConnection conn, string data)
         {
             const string Sql =
-                "INSERT INTO [CardHolderData] ([Data]) " +
+                "INSERT INTO [CardHolderData] ([Data]) " + // TODO: rename table
                 "VALUES (@data); " +
                 "SELECT CAST(SCOPE_IDENTITY() as int)";
 

@@ -14,7 +14,7 @@ namespace KeyVault.Client.UnitTests.Providers
     {
         private TokeniserService subject;
         private CardHolderData cardHolderData;
-        private Mock<IAddCardCommand> addCardCommand;
+        private Mock<IAddDataCommand> addCardCommand;
         private string result;
 
         [Test]
@@ -26,7 +26,7 @@ namespace KeyVault.Client.UnitTests.Providers
         public void Given_Valid_CHD()
         {
             this.cardHolderData = new CardHolderData();
-            this.addCardCommand = new Mock<IAddCardCommand>();
+            this.addCardCommand = new Mock<IAddDataCommand>();
             this.subject = new TokeniserService(this.addCardCommand.Object, null);
         }
 
@@ -61,7 +61,7 @@ namespace KeyVault.Client.UnitTests.Providers
 
         public void Given_A_Valid_Token()
         {
-            var cardQuery = new Mock<IGetCardQuery>();
+            var cardQuery = new Mock<IGetDataQuery>();
             var card = new CardHolderData { CardNumber = "CardNo", NameOnCard = "Mr Thierry Henry", EndDate = "02/22" };
 
             //cardQuery.Setup(x => x.Execute(Token)).ReturnsAsync(card);

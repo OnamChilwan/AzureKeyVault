@@ -4,16 +4,16 @@ namespace KeyVault.Client.Queries
     using System.Threading.Tasks;
     using Dapper;
 
-    public interface IGetCardQuery
+    public interface IGetDataQuery
     {
         Task<string> Execute(string token);
     }
 
-    public class SqlGetCardQuery : IGetCardQuery
+    public class SqlGetDataQuery : IGetDataQuery
     {
         private readonly string connectionString;
 
-        public SqlGetCardQuery(string connectionString)
+        public SqlGetDataQuery(string connectionString)
         {
             this.connectionString = connectionString;
         }

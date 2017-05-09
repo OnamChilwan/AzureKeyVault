@@ -57,8 +57,8 @@ namespace KeyVault.Client
             container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
             container.RegisterSingleton<IKeyVaultService>(new KeyVaultService(this.uri, this.clientId, this.clientSecret));
             container.RegisterSingleton<ITokeniserService, TokeniserService>();
-            container.RegisterSingleton<IAddCardCommand>(new SqlAddCardCommand(this.connectionString));
-            container.RegisterSingleton<IGetCardQuery>(new SqlGetCardQuery(this.connectionString));
+            container.RegisterSingleton<IAddDataCommand>(new SqlAddDataCommand(this.connectionString));
+            container.RegisterSingleton<IGetDataQuery>(new SqlGetDataQuery(this.connectionString));
             container.Verify();
 
             return container;

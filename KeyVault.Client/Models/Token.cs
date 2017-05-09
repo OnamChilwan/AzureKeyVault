@@ -19,7 +19,6 @@ namespace KeyVault.Client.Models
             var securityTokenDescriptor = new SecurityTokenDescriptor();
             var token = new JwtSecurityTokenHandler().CreateEncodedJwt(securityTokenDescriptor);
 
-            //var base64String = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Guid.NewGuid()}{DateTime.Now}"));
             return new Token($"{Guid.NewGuid()}");
         }
 
