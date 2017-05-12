@@ -21,9 +21,8 @@
         public async Task<IHttpActionResult> Put([FromBody]JObject data)
         {
             var token = await this.tokeniserService.Tokenise(data.ToString());
-            var uri = $"{this.Request.RequestUri}/detokenise";
 
-            return this.Created(uri, new Reference { Value = token });
+            return this.Created(string.Empty, new Reference { Value = token });
         }
 
         [Route("detokenise")]

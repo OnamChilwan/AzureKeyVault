@@ -12,18 +12,18 @@
     using SimpleInjector;
     using SimpleInjector.Integration.WebApi;
 
-    public class Foo : ITokeniserService
-    {
-        public Task<string> Tokenise<T>(T data)
-        {
-            throw new NotImplementedException();
-        }
+    //public class Foo : ITokeniserService
+    //{
+    //    public Task<string> Tokenise<T>(T data)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
 
-        public Task<T> Detokenise<T>(string token)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    public Task<T> Detokenise<T>(string token)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 
     public class TestStartup : Startup
     {
@@ -36,7 +36,7 @@
         protected override Container ConfigureContainer()
         {
             var container = new Container();
-            container.RegisterSingleton<ITokeniserService, Foo>();
+            //container.RegisterSingleton<ITokeniserService, Foo>();
 
             container.Verify();
 

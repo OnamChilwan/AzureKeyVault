@@ -22,23 +22,24 @@ namespace KeyVault.Client.Services
     {
         private readonly IAddDataCommand addDataCommand;
         private readonly IGetDataQuery getDataQuery;
-        private const string SecuirtyKey = "hello world this is a very secure secret sssssshhhhhh"; //TODO: inject this in
+        private readonly string securityKey;
+        //private const string SecuirtyKey = "hello world this is a very secure secret sssssshhhhhh"; //TODO: inject this in
 
-        public TokeniserService(
-            IAddDataCommand addDataCommand,
-            IGetDataQuery getDataQuery)
+        public TokeniserService(IAddDataCommand addDataCommand, IGetDataQuery getDataQuery, string securityKey)
         {
             this.addDataCommand = addDataCommand;
             this.getDataQuery = getDataQuery;
+            this.securityKey = securityKey;
         }
 
         public async Task<string> Tokenise(string data)
         {
             var reference = Guid.NewGuid().ToString("D");
+            //Convert.ToBase64String(Encoding.UTF8.GetBytes(data))
 
-            await this.addDataCommand.Execute(reference, Convert.ToBase64String(Encoding.UTF8.GetBytes(data)));
+            await this.addDataCommand.Execute(reference, data);
 
-            return await Task.FromResult(CreateJwt(reference));
+            return await Task.FromResult(this.CreateJwt(reference));
         }
 
         public async Task<string> Detokenise(string token)
@@ -55,17 +56,17 @@ namespace KeyVault.Client.Services
             throw new Exception("Invalid token");
         }
 
-        private static string CreateJwt(string token)
+        private string CreateJwt(string token)
         {
             var claims = new List<Claim> { new Claim(ClaimTypes.UserData, token) };
             var claimsIdentity = new ClaimsIdentity(claims);
             var securityTokenDescriptor = new SecurityTokenDescriptor
             {
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddDays(1).Date,
                 Issuer = "Tokenizer",
-                IssuedAt = DateTime.UtcNow,
+                IssuedAt = DateTime.UtcNow.Date,
                 Subject = claimsIdentity,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecuirtyKey)), SecurityAlgorithms.HmacSha256)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.securityKey)), SecurityAlgorithms.HmacSha256)
             };
 
             var handler = new JwtSecurityTokenHandler();

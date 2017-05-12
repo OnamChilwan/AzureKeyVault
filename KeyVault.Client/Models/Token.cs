@@ -5,26 +5,26 @@ namespace KeyVault.Client.Models
 
     using Microsoft.IdentityModel.Tokens;
 
-    public class Token
-    {
-        private readonly string token;
+    //public class Token
+    //{
+    //    private readonly string token;
 
-        public Token(string token)
-        {
-            this.token = token;
-        }
+    //    public Token(string token)
+    //    {
+    //        this.token = token;
+    //    }
 
-        public static Token Create()
-        {
-            var securityTokenDescriptor = new SecurityTokenDescriptor();
-            var token = new JwtSecurityTokenHandler().CreateEncodedJwt(securityTokenDescriptor);
+    //    public static Token Create()
+    //    {
+    //        var securityTokenDescriptor = new SecurityTokenDescriptor();
+    //        var token = new JwtSecurityTokenHandler().CreateEncodedJwt(securityTokenDescriptor);
 
-            return new Token($"{Guid.NewGuid()}");
-        }
+    //        return new Token($"{Guid.NewGuid()}");
+    //    }
 
-        public override string ToString()
-        {
-            return this.token;
-        }
-    }
+    //    public override string ToString()
+    //    {
+    //        return this.token;
+    //    }
+    //}
 }
