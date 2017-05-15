@@ -53,10 +53,11 @@ namespace KeyVault.Client
 
         protected virtual Container ConfigureContainer()
         {
+            const string SecurityKey = "hello world this is a very secure secret sssssshhhhhh"; // loaded from vault
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
             container.RegisterSingleton<IKeyVaultService>(new KeyVaultService(this.uri, this.clientId, this.clientSecret));
-            container.RegisterSingleton<ITokeniserService, TokeniserService>();
+            container.RegisterSingleton<ITokeniserService>(new TokeniserService(container.GetInstance<IAddDataCommand>(), container.GetInstance<IGetDataQuery>(), SecurityKey));
             container.RegisterSingleton<IAddDataCommand>(new SqlAddDataCommand(this.connectionString));
             container.RegisterSingleton<IGetDataQuery>(new SqlGetDataQuery(this.connectionString));
             container.Verify();
