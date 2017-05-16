@@ -1,59 +1,38 @@
 ﻿namespace KeyVault.Client.ComponentTests
 {
-    using System;
-    using System.Threading.Tasks;
     using System.Web.Http;
-    using KeyVault.Client.Models;
+    using KeyVault.Client.Commands;
+    using KeyVault.Client.ComponentTests.Data;
+    using KeyVault.Client.Queries;
     using KeyVault.Client.Services;
-
-    using Microsoft.Owin.Testing;
-    using NUnit.Framework;
     using Owin;
     using SimpleInjector;
     using SimpleInjector.Integration.WebApi;
 
-    //public class Foo : ITokeniserService
-    //{
-    //    public Task<string> Tokenise<T>(T data)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public Task<T> Detokenise<T>(string token)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    public class TestStartup : Startup
+    public class TestStartup
     {
-        public void ConfigureServices(IAppBuilder app)
+        public void Configuration(IAppBuilder app)
         {
             var config = new HttpConfiguration();
             config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(this.ConfigureContainer());
+
+            config.MapHttpAttributeRoutes();
+            app.UseWebApi(config);
         }
 
-        protected override Container ConfigureContainer()
+        private Container ConfigureContainer()
         {
+            const string SecurityKey = "hello world this is a very secure secret sssssshhhhhh";
             var container = new Container();
-            //container.RegisterSingleton<ITokeniserService, Foo>();
+            var repo = new Repository();
 
+            container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
+            container.RegisterSingleton<IAddDataCommand>(repo);
+            container.RegisterSingleton<IGetDataQuery>(repo);
+            container.RegisterSingleton<ITokeniserService>(new TokeniserService(repo, repo, SecurityKey));
             container.Verify();
 
             return container;
-        }
-    }
-
-    [TestFixture]
-    public class CardsControllerTests
-    {
-        [Test]
-        public void When_Doing_Something()
-        {
-            using (var server = TestServer.Create<TestStartup>())
-            {
-                var result = server.HttpClient.GetAsync("http://foo/api/cards/token");
-            }
         }
     }
 }
