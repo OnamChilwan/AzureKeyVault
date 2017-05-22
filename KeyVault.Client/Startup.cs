@@ -27,7 +27,7 @@ namespace KeyVault.Client
             this.ReadConfiguration();
 
             var config = new HttpConfiguration();
-            config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(this.ConfigureContainer());
+            config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(this.ConfigureContainer(config));
 
             ConfigureWebApi(config);
             this.ConfigureAlwaysEncryptedSql();
@@ -51,15 +51,19 @@ namespace KeyVault.Client
             this.connectionString = ConfigurationManager.ConnectionStrings["db"].ConnectionString;
         }
 
-        protected virtual Container ConfigureContainer()
+        protected virtual Container ConfigureContainer(HttpConfiguration config)
         {
             const string SecurityKey = "hello world this is a very secure secret sssssshhhhhh"; // loaded from vault
             var container = new Container();
-            container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
-            container.RegisterSingleton<IKeyVaultService>(new KeyVaultService(this.uri, this.clientId, this.clientSecret));
-            container.RegisterSingleton<ITokeniserService>(new TokeniserService(container.GetInstance<IAddDataCommand>(), container.GetInstance<IGetDataQuery>(), SecurityKey));
-            container.RegisterSingleton<IAddDataCommand>(new SqlAddDataCommand(this.connectionString));
-            container.RegisterSingleton<IGetDataQuery>(new SqlGetDataQuery(this.connectionString));
+            var sqlGetDataQuery = new SqlGetCardQuery(this.connectionString);
+            var sqlAddCardCommand = new SqlAddCardCommand(this.connectionString);
+
+            container.RegisterWebApiControllers(config);
+            //container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
+            container.RegisterSingleton<IAddDataCommand>(sqlAddCardCommand);
+            container.RegisterSingleton<IGetDataQuery>(sqlGetDataQuery);
+            container.RegisterSingleton<ITokeniserService>(
+                new TokeniserService(sqlAddCardCommand, sqlGetDataQuery, SecurityKey));
             container.Verify();
 
             return container;

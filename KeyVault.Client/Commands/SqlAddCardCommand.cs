@@ -5,16 +5,11 @@ namespace KeyVault.Client.Commands
     using System.Threading.Tasks;
     using Dapper;
 
-    public interface IAddDataCommand
-    {
-        Task Execute(string token, string data);
-    }
-
-    public class SqlAddDataCommand : IAddDataCommand
+    public class SqlAddCardCommand : IAddDataCommand
     {
         private readonly string connectionString;
 
-        public SqlAddDataCommand(string connectionString)
+        public SqlAddCardCommand(string connectionString)
         {
             this.connectionString = connectionString;
         }

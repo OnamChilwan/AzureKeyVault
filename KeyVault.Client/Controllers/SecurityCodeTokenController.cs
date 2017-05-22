@@ -1,22 +1,31 @@
-﻿namespace KeyVault.Client.Controllers
+namespace KeyVault.Client.Controllers
 {
+    using System.Configuration;
     using System.Threading.Tasks;
     using System.Web.Http;
+
+    using KeyVault.Client.Commands;
     using KeyVault.Client.Models;
+    using KeyVault.Client.Queries;
     using KeyVault.Client.Services;
+
     using Newtonsoft.Json.Linq;
 
     [RoutePrefix("api")]
-    public class TokenController : ApiController
+    public class SecurityCodeTokenController : ApiController
     {
         private readonly ITokeniserService tokeniserService;
 
-        public TokenController(ITokeniserService tokeniserService)
+        public SecurityCodeTokenController()
         {
-            this.tokeniserService = tokeniserService;
+            var connectionString = ConfigurationManager.ConnectionStrings["db"].ConnectionString;
+            this.tokeniserService = new TokeniserService(
+                new SqlAddSecurityCodeCommand(connectionString),
+                new SqlGetSecurityCodeQuery(connectionString),
+                "hello world this is a very secure secret sssssshhhhhh");
         }
 
-        [Route("tokenise")]
+        [Route("securitycode/tokenise")]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody]JObject data)
         {
@@ -25,7 +34,7 @@
             return this.Created(string.Empty, new Reference { Value = token });
         }
 
-        [Route("detokenise")]
+        [Route("securitycode/detokenise")]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody]Reference reference)
         {

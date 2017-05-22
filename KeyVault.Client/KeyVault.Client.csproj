@@ -204,16 +204,21 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddDataCommand.cs" />
-    <Compile Include="Controllers\TokenController.cs" />
+    <Compile Include="Commands\SqlAddCardCommand.cs" />
+    <Compile Include="Commands\IAddDataCommand.cs" />
+    <Compile Include="Commands\SqlAddSecurityCodeCommand.cs" />
+    <Compile Include="Controllers\CardTokenController.cs" />
+    <Compile Include="Controllers\SecurityCodeTokenController.cs" />
     <Compile Include="Models\CardHolderData.cs" />
     <Compile Include="Models\EncryptedCard.cs" />
     <Compile Include="Models\Reference.cs" />
     <Compile Include="Models\Token.cs" />
+    <Compile Include="Queries\IGetDataQuery.cs" />
+    <Compile Include="Queries\SqlGetSecurityCodeQuery.cs" />
     <Compile Include="Services\KeyVaultService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\TokeniserService.cs" />
-    <Compile Include="Queries\GetDataQuery.cs" />
+    <Compile Include="Queries\SqlGetCardQuery.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup />

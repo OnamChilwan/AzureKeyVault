@@ -17,7 +17,7 @@ namespace KeyVault.Client.UnitTests.Controllers
         {
             const string Token = "token";
             var tokeniserService = new Mock<ITokeniserService>();
-            var subject = new TokenController(tokeniserService.Object);
+            var subject = new CardTokenController(tokeniserService.Object);
             var content = JObject.FromObject(new Foo());
 
             tokeniserService.Setup(x => x.Tokenise(content.ToString())).ReturnsAsync(Token);
@@ -31,7 +31,7 @@ namespace KeyVault.Client.UnitTests.Controllers
         [Test]
         public async void When_Detokenising_A_Token_Which_Does_Not_Exist()
         {
-            var subject = new TokenController(new Mock<ITokeniserService>().Object);
+            var subject = new CardTokenController(new Mock<ITokeniserService>().Object);
             var result = await subject.Post(new Reference { Value = "token-value" }) as NotFoundResult;
 
             Assert.That(result, Is.Not.Null);
@@ -42,7 +42,7 @@ namespace KeyVault.Client.UnitTests.Controllers
         {
             const string Token = "token";
             var tokeniserService = new Mock<ITokeniserService>();
-            var subject = new TokenController(tokeniserService.Object);
+            var subject = new CardTokenController(tokeniserService.Object);
             var content = JObject.FromObject(new Foo { Bar = "Arsene Wenger" });
 
             tokeniserService.Setup(x => x.Detokenise(Token)).ReturnsAsync(content.ToString());
